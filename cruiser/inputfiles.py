@@ -10,18 +10,12 @@ class InputFile(object):
     """Base class for handling input files."""
 
     def __init__(self):
-        self._sim = self.default()
-        self._params = None
+        self.sim = self.default()
+        self.params = tuple([k for k, v in inspect.getmembers(self.__class__)
+                             if isinstance(v, InParam)])
 
     def __call__(self):
         return self._sim
-
-    @property
-    def params(self):
-        if self._params is None:
-            self._params = tuple([k for k, v in inspect.getmembers(self)
-                                  if isinstance(v, InParam)])
-        return self._params
 
     def default(self):
         return {}
@@ -48,7 +42,7 @@ class InParam(object):
 
     def __set__(self, instance, value):
         setattr(instance, self.private_name, value)
-        self.setter(value)
+        self.setter(instance, value)
 
 
 def inparam(default=None, widget=None):
