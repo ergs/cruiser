@@ -28,14 +28,17 @@ class InputFile(object):
 
 
 class InParam(object):
-    """Descriptor class for inpute parameters"""
+    """Descriptor class for input parameters"""
 
-    def __init__(self, name, setter, default=None, widget=None):
+    def __init__(self, name, setter, default=None, widget=None, widget_kwargs=None):
         self.name = name
         self.private_name = '_' + name
         self.setter = setter
         self.default = default
         self.widget = widget
+        self.widget_kwargs = {} if widget_kwargs is None else widget_kwargs
+        self.widget_kwargs.pop('value', None)
+        self.widget_kwargs.pop('description', None)
 
     def __get__(self, instance, owner):
         if instance is None:
@@ -51,10 +54,11 @@ class InParam(object):
         self.setter(instance, value)
 
 
-def inparam(default=None, widget=None):
+def inparam(default=None, widget=None, **widget_kwargs):
     """Decorator for turning a method into an InParam"""
     def dec(f):
-        return InParam(f.__name__, f, default=default, widget=widget)
+        return InParam(f.__name__, f, default=default, widget=widget,
+                       widget_kwargs=widget_kwargs)
     return dec
 
 
