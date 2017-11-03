@@ -3,7 +3,13 @@ import os
 import sys
 import pdb
 import inspect
+import importlib
 import traceback
+
+
+INPUTS_DIR = os.path.join(os.path.dirname(__file__), 'inputs')
+INPUTS = tuple([os.path.splitext(f)[0] for f in os.listdir(INPUTS_DIR)
+                if not f.startswith('_')])
 
 
 class InputFile(object):
@@ -50,3 +56,10 @@ def inparam(default=None, widget=None):
     def dec(f):
         return InParam(f.__name__, f, default=default, widget=widget)
     return dec
+
+
+def load(name):
+    """Loads a simulation from its module name."""
+    mod = importlib.import_module('cruiser.inputs.' + name)
+    sim = mod.Simulation()
+    return sim
