@@ -1,17 +1,21 @@
 """Input UI constructor for cruiser."""
+import os
+import sys
 import json
+import time
 import tempfile
 import subprocess
 
 import ipywidgets as widgets
 from IPython.display import display
 
-from cruiser.inputfiles import INPUTS, load
+from cruiser.inputfiles import SCENARIOS, load
+from cruiser.streams import stream_output, UnexpectedEndOfStream
 
 
 SIMULATION = None
 CURRENT_RUN_WIDGETS = []
-CURRENT_CASE_WIDGETS = []
+CURRENT_SCENARIO_WIDGETS = []
 
 
 def close_open_widgets(open_widgets):
@@ -27,14 +31,14 @@ def on_param_value_change(change):
     setattr(SIMULATION, param, change['new'])
 
 
-def on_case_change(change):
+def on_scenario_change(change):
     """Switches between input parameter settings."""
     global SIMULATION
-    close_open_widgets(CURRENT_CASE_WIDGETS)
-    case_name = change['new']
-    if not case_name:
+    close_open_widgets(CURRENT_SCENARIO_WIDGETS)
+    scenario_name = change['new']
+    if not scenario_name:
         return
-    sim = SIMULATION = load(case_name)
+    sim = SIMULATION = load(scenario_name)
     for param in sim.params:
         inp = getattr(sim.__class__, param)
         widget_cls = getattr(widgets, inp.widget)
@@ -43,39 +47,41 @@ def on_case_change(change):
                        **inp.widget_kwargs)
         w.param = param
         w.observe(on_param_value_change, names='value')
-        CURRENT_CASE_WIDGETS.append(w)
+        CURRENT_SCENARIO_WIDGETS.append(w)
         display(w)
 
 
-def run_simulation():
+def run_simulation(button):
     """Runs and analyzes a Cyclus Simulation."""
     close_open_widgets(CURRENT_RUN_WIDGETS)
     # get output from cyclus
     out = widgets.Output()
     CURRENT_RUN_WIDGETS.append(out)
     display(out)
-    rundir = tempfile.mkdtemp(prefix='cyclus')
+    rundir = tempfile.mkdtemp(prefix='cyclus-')
     # create input file
-    infile = os.path.join(rundir, SIMULATION.name + '.json')
+    infile = os.path.join(rundir, SIMULATION.scenario + '.json')
     with open(infile, 'w') as f:
         json.dump(SIMULATION.sim, f)
-    out.write('Wrote Cyclus input file to {0}'.format(infile))
+    with out:
+        print('Wrote Cyclus input file to {0}'.format(infile))
     # run cyclus simulation
-    outfile = os.path.join(rundir, SIMULATION.name + '.h5')
-    subprocess.check_call(['cyclus', '-o', outfile, infile], stdout=out,
-                          stderr=out)
+    outfile = os.path.join(rundir, SIMULATION.scenario + '.h5')
+    with out:
+        print('Starting Cyclus Simulation')
+        stream_output(['cyclus', '-o', outfile, infile])
 
 
 def input_ui():
     """Builds the top-level user interface structure."""
     # selector for simulation case
-    case = widgets.Dropdown(
-        options=('',) + INPUTS,
+    scenario = widgets.Dropdown(
+        options=('',) + SCENARIOS,
         description='Case:',
         disabled=False,
     )
-    case.observe(on_case_change, names='value')
-    display(case)
+    scenario.observe(on_scenario_change, names='value')
+    display(scenario)
     # run sim button
     run = widgets.Button(
         description='Run Simulation',
@@ -84,5 +90,3 @@ def input_ui():
         )
     run.on_click(run_simulation)
     display(run)
-
-
