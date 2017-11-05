@@ -1,4 +1,4 @@
-"""Input UI constructor for cruiser.""""
+"""Input UI constructor for cruiser."""
 import json
 import tempfile
 import subprocess
