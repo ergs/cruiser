@@ -4,6 +4,8 @@ from cruiser.inputfiles import InputFile, inparam
 class Simulation(InputFile):
     """EG01 -> EG23 transition Scenario"""
 
+    scenario = 'EG01-EG23'
+
     @inparam(default=3024, widget='IntSlider', min=1, max=6000)
     def duration(self, value):
         self.sim['simulation']['control']['duration'] = value

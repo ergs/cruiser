@@ -15,6 +15,8 @@ INPUTS = tuple([os.path.splitext(f)[0] for f in os.listdir(INPUTS_DIR)
 class InputFile(object):
     """Base class for handling input files."""
 
+    scenario = 'nemo'
+
     def __init__(self):
         self.sim = self.default()
         self.params = tuple([k for k, v in inspect.getmembers(self.__class__)

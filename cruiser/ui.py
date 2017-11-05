@@ -1,28 +1,36 @@
+"""Input UI constructor for cruiser.""""
+import json
+import tempfile
+import subprocess
+
 import ipywidgets as widgets
-from ipywidgets import IntSlider
 from IPython.display import display
 
 from cruiser.inputfiles import INPUTS, load
 
 
 SIMULATION = None
+CURRENT_RUN_WIDGETS = []
 CURRENT_CASE_WIDGETS = []
 
 
-def close_open_case_widgets():
-    for widget in CURRENT_CASE_WIDGETS:
+def close_open_widgets(open_widgets):
+    """Closes existing widgets for input file building"""
+    for widget in open_widgets:
         widget.close()
-    CURRENT_CASE_WIDGETS.clear()
+    open_widgets.clear()
 
 
 def on_param_value_change(change):
+    """Updates an input parameter"""
     param = change['owner'].param
     setattr(SIMULATION, param, change['new'])
 
 
 def on_case_change(change):
+    """Switches between input parameter settings."""
     global SIMULATION
-    close_open_case_widgets()
+    close_open_widgets(CURRENT_CASE_WIDGETS)
     case_name = change['new']
     if not case_name:
         return
@@ -39,13 +47,35 @@ def on_case_change(change):
         display(w)
 
 
+def run_simulation():
+    """Runs and analyzes a Cyclus Simulation."""
+    close_open_widgets(CURRENT_RUN_WIDGETS)
+    # get output from cyclus
+    out = widgets.Output()
+    CURRENT_RUN_WIDGETS.append(out)
+    display(out)
+    rundir = tempfile.mkdtemp(prefix='cyclus')
+
+
+
+
 def input_ui():
+    """Builds the top-level user interface structure."""
+    # selector for simulation case
     case = widgets.Dropdown(
         options=('',) + INPUTS,
         description='Case:',
         disabled=False,
     )
     case.observe(on_case_change, names='value')
-    return case
+    display(case)
+    # run sim button
+    run = widgets.Button(
+        description='Run Simulation',
+        button_style='',
+        tooltip='Run the current Cyclus simulation',
+        )
+    run.on_click(run_simulation)
+    display(run)
 
 
