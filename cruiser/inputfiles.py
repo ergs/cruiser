@@ -7,9 +7,9 @@ import importlib
 import traceback
 
 
-INPUTS_DIR = os.path.join(os.path.dirname(__file__), 'inputs')
-INPUTS = tuple([os.path.splitext(f)[0] for f in os.listdir(INPUTS_DIR)
-                if not f.startswith('_')])
+SCENARIO_DIR = os.path.join(os.path.dirname(__file__), 'scenarios')
+SCENARIOS = tuple([os.path.splitext(f)[0] for f in os.listdir(SCENARIO_DIR)
+                   if not f.startswith('_')])
 
 
 class InputFile(object):
@@ -66,6 +66,6 @@ def inparam(default=None, widget=None, **widget_kwargs):
 
 def load(name):
     """Loads a simulation from its module name."""
-    mod = importlib.import_module('cruiser.inputs.' + name)
+    mod = importlib.import_module('cruiser.scenarios.' + name)
     sim = mod.Simulation()
     return sim

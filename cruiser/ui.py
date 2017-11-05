@@ -55,8 +55,15 @@ def run_simulation():
     CURRENT_RUN_WIDGETS.append(out)
     display(out)
     rundir = tempfile.mkdtemp(prefix='cyclus')
-
-
+    # create input file
+    infile = os.path.join(rundir, SIMULATION.name + '.json')
+    with open(infile, 'w') as f:
+        json.dump(SIMULATION.sim, f)
+    out.write('Wrote Cyclus input file to {0}'.format(infile))
+    # run cyclus simulation
+    outfile = os.path.join(rundir, SIMULATION.name + '.h5')
+    subprocess.check_call(['cyclus', '-o', outfile, infile], stdout=out,
+                          stderr=out)
 
 
 def input_ui():
