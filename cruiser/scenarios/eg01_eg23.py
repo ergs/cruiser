@@ -6,7 +6,7 @@ class Simulation(InputFile):
 
     scenario = 'EG01-EG23'
 
-    @inparam(default=3024, widget='IntSlider', min=1, max=6000)
+    @inparam(default=600, widget='IntSlider', min=1, max=6000)
     def duration(self, value):
         self.sim['simulation']['control']['duration'] = value
 
@@ -29,7 +29,7 @@ class Simulation(InputFile):
     {'lib': 'cycamore', 'name': 'Storage'},
    ],
   },
-  'control': {'duration': '3024', 'startmonth': '1', 'startyear': '1959'},
+  'control': {'duration': 600, 'startmonth': '1', 'startyear': '1959'},
   'facility': [
    {
     'config': {

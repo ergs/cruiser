@@ -10,7 +10,8 @@ import ipywidgets as widgets
 from IPython.display import display
 
 from cruiser.inputfiles import SCENARIOS, load
-from cruiser.streams import stream_output, UnexpectedEndOfStream
+from cruiser.streams import stream_output
+from cruiser.analysis import stock_analysis
 
 
 SIMULATION = None
@@ -70,6 +71,8 @@ def run_simulation(button):
     with out:
         print('Starting Cyclus Simulation')
         stream_output(['cyclus', '-o', outfile, infile])
+    # perform analysis
+    stock_analysis(outfile)
 
 
 def input_ui():
