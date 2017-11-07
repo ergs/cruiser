@@ -10,6 +10,10 @@ class Simulation(InputFile):
     def duration(self, value):
         self.sim['simulation']['control']['duration'] = value
 
+    @inparam(default=1, widget='IntSlider', min=1, max=12)
+    def startmonth(self, value):
+        self.sim['simulation']['control']['startmonth'] = value
+
     def default(self):
         return {
  'simulation': {
@@ -29,7 +33,7 @@ class Simulation(InputFile):
     {'lib': 'cycamore', 'name': 'Storage'},
    ],
   },
-  'control': {'duration': 600, 'startmonth': '1', 'startyear': '1959'},
+  'control': {'duration': 600, 'startmonth': 1, 'startyear': '1959'},
   'facility': [
    {
     'config': {
