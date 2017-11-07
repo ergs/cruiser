@@ -14,6 +14,10 @@ class Simulation(InputFile):
     def startmonth(self, value):
         self.sim['simulation']['control']['startmonth'] = value
 
+    @inparam(default=1e299, widget='FloatSlider', min=0.0, max=1e299)
+    def mine_throughput(self, value):
+        self.sim['simulation']['facility'][0]['config']['Source']['throughput'] = value
+
     def default(self):
         return {
  'simulation': {
@@ -40,7 +44,7 @@ class Simulation(InputFile):
      'Source': {
       'outcommod': 'natl_u',
       'outrecipe': 'natl_u_recipe',
-      'throughput': '1E299',
+      'throughput': 1E299,
      },
     },
     'name': 'mine',
