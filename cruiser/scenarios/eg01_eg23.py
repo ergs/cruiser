@@ -18,6 +18,15 @@ class Simulation(InputFile):
     def mine_throughput(self, value):
         self.sim['simulation']['facility'][0]['config']['Source']['throughput'] = value
 
+    @inparam(default=.003, widget='FloatSlider', min=0.0, max=0.00711, step=0.0001, readout_format='.4f')
+    def enrichment_tails_assay(self, value):
+        self.sim['simulation']['facility'][1]['config']['Enrichment']['tails_assay'] = value
+
+    @inparam(default=1e100, widget='FloatSlider', min=0.0, max=10, step=0.1, readout_format='.4f')
+    def new_parameter(self, value):
+        self.sim['simulation']['facility'][2]['config']['mixer']['throughput'] = value
+
+
     def default(self):
         return {
  'simulation': {
@@ -56,8 +65,8 @@ class Simulation(InputFile):
       'feed_recipe': 'natl_u_recipe',
       'initial_feed': '1E100',
       'product_commod': 'uox',
-      'swu_capacity': '1E100',
-      'tails_assay': '0.003',
+      'swu_capacity': 1E100,
+      'tails_assay': 0.003,
       'tails_commod': 'tailings',
      },
     },
