@@ -22,6 +22,10 @@ class Simulation(InputFile):
     def enrichment_tails_assay(self, value):
         self.sim['simulation']['facility'][1]['config']['Enrichment']['tails_assay'] = value
 
+    @inparam(default=1E100, widget='FloatSlider', min=0.0, max=1E100)
+    def enrichment_swu_capacity(self, value):
+        self.sim['simulation']['facility'][1]['config']['Enrichment']['swu_capacity'] = value
+
     @inparam(default=1e100, widget='FloatSlider', min=0.0, max=10, step=0.1, readout_format='.4f')
     def mixer_throughput(self, value):
         self.sim['simulation']['facility'][2]['config']['mixer']['throughput'] = value
