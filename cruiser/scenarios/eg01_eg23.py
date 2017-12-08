@@ -22,7 +22,7 @@ class Simulation(InputFile):
     def enrichment_tails_assay(self, value):
         self.sim['simulation']['facility'][1]['config']['Enrichment']['tails_assay'] = value
 
-    @inparam(default=1E100, widget='FloatSlider', min=0.0, max=0.008, step=0.0001, readout_format='.4f')
+    @inparam(default=1E100, widget='FloatSlider', min=0.0, max=1E100)
     def enrichment_swu_capacity(self, value):
         self.sim['simulation']['facility'][1]['config']['Enrichment']['swu_capacity'] = value
 
