@@ -30,6 +30,9 @@ class Simulation(InputFile):
     def mixer_throughput(self, value):
         self.sim['simulation']['facility'][2]['config']['mixer']['throughput'] = value
 
+    @inparam(default=1E100, widget='FloatSlider', min=0.0, max=1E100)
+    def Separations_throughput(self, value):
+        self.sim['simulation']['facility'][1]['config']['Separations']['throughput'] = value
 
     def default(self):
         return {
