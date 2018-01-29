@@ -18,10 +18,6 @@ class Simulation(InputFile):
     def mine_throughput(self, value):
         self.sim['simulation']['facility'][0]['config']['Source']['throughput'] = value
 
-    @inparam(default=.003, widget='FloatSlider', min=0.0, max=0.00711, step=0.0001, readout_format='.4f')
-    def enrichment_tails_assay(self, value):
-        self.sim['simulation']['facility'][1]['config']['Enrichment']['tails_assay'] = value
-
     @inparam(default=1E100, widget='FloatSlider', min=0.0, max=1E100)
     def enrichment_swu_capacity(self, value):
         self.sim['simulation']['facility'][1]['config']['Enrichment']['swu_capacity'] = value
@@ -33,6 +29,10 @@ class Simulation(InputFile):
     @inparam(default=1E100, widget='FloatSlider', min=0.0, max=1E100)
     def separations_throughput(self, value):
         self.sim['simulation']['facility'][1]['config']['separations']['throughput'] = value
+
+    @inparam(default=.003, widget='FloatSlider', min=0.0, max=0.00711, step=0.0001, readout_format='.4f')
+    def enrichment_tails_assay(self, value):
+        self.sim['simulation']['facility'][1]['config']['Enrichment']['tails_assay'] = value        
 
     def default(self):
         return {
